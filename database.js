@@ -80,9 +80,36 @@ let addNewRepository = (newRepository, callBack) => {
   })
 } 
 
+// @ METHOD
+// Update Private Status Of a Specific Repository In Database.
+let updateRepository = (repoID, swapStatus,callBack) => {
+  console.log('REPOSITORIES', Repositories)
+  Repositories.updateOne({_id: repoID}, {$set: {status: swapStatus}}, (error, response)=>{
+    if (error) {
+      callBack(error)
+    } else {
+      getRepositories(callBack)
+    }
+  })
+}
 
+// @ METHOD
+// Delete Specific Repository From Database.
+let deleteRepository = (repoID, callBack) => {
+  Repositories.findOneAndDelete({_id: repoID}, (error, response)=>{
+    if (error) {
+      callBack(error);
+    } else {
+      getRepositories(callBack);
+    }
+  })
+}
+
+// Export Our "Database Methods" To Deal With It In Our "Express Server".
 module.exports = {
   getRepositories,
-  addNewRepository
+  addNewRepository,
+  updateRepository,
+  deleteRepository
 }
 

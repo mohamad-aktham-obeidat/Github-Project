@@ -10,10 +10,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.json('server is working');
-});
-
 /*
 //Example get request with database
 app.get('/tasks', (req, res) => {
@@ -26,10 +22,13 @@ app.get('/tasks', (req, res) => {
 // Start your code below
 // @GET
 // To Check If Server Works Or Not
-app.get('/', (req, res) => {
-  res.json('Server Works *.* ')
-  
-})
+
+    /* app.get('/', (req, res) => {
+      res.json('Server Works *.* ')
+
+    }) */
+
+
 
 // @GET
 // Return All Repositories From Database
@@ -43,26 +42,29 @@ app.get('/repositories', (req, res) => {
 // @POST
 // Add Specific Repository To Database.
 app.post('/repositories', (req, res) => {
-  mongo.addNewRepository(req.body, (response)=>{
-    
+  mongo.addNewRepository(req.body, (response) => {
     res.json(response);
   })
 })
 
 // @PUT
 // Update Repository Status From (Public => Private) && (Private => Public).
-app.put('/repositories/:id', (req, res) => {
-
-  console.log(res);
-  res.json(res);
+app.put('/repositories/:id/:newStatusValue', (req, res) => {
+  let repoID = req.params.id
+  let repoStatus = req.params.newStatusValue;
+  mongo.updateRepository(repoID, repoStatus, response => {
+    res.json(response)
+  })
 })
 
 // @DELETE
 // Delete Specific Repository To Database.
 app.delete('/repositories/:id', (req, res) => {
-
-  console.log(res);
-  res.json(res);
+  // let repoID = req.originalUrl.slice(14)
+  let repoID = req.params.id
+  mongo.deleteRepository(repoID, response => {
+    res.json(response);
+  })
 })
 
 

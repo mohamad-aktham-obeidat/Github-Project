@@ -1,26 +1,74 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import Form from './Components/Form';
+import Table from './Components/Table.js'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    repositories: []
+  }
+
+
+  // componentDidMount() {
+  //   this.getAllRepositories();
+  // }
+  // Get All Repositories From Database.
+  getAllRepositories = () => {
+    axios.get('/repositories')
+      .then(response => {
+        console.log(response.data)
+        this.setState({ repositories: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
+  // Add New Repository To Database.
+  addNewRepository = (newRepositoryData) => {
+    axios.post('/repositories', newRepositoryData)
+      .then(response => {
+        this.setState({ repositories: response.data });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+
+  //Update Repository Status
+  updateRepositoryStatus = (repositoryID, newStatus) => {
+    axios.put(`/repositories/${repositoryID}/${!newStatus}`)
+      .then(response => {
+        this.setState({ repositories: response.data });
+      })
+  }
+
+  // Delete Repository From Database.
+  deleteRepository = (repositoryID) => {
+    axios.delete(`/repositories/${repositoryID}`)
+      .then(response => {
+        this.setState({ repositories: response.data });
+      })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        {/* Render Form */}
+        {this.state.repositories && <Form
+          create={this.addNewRepository}
+          read={this.getAllRepositories} />}
+
+        {/* Render Repositories Table */}
+        {this.state.repositories && <Table
+          read={this.state.repositories}
+          update={this.updateRepositoryStatus}
+          remove={this.deleteRepository} />}
+      </div>
+    );
+  }
 }
 
 export default App;
