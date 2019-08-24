@@ -57,6 +57,7 @@ class Form extends Component {
                     </div>
                     <div className="form-group column ml-2">
                         <select defaultValue='Select Repo State...' className='form-control w-100 p-3 rounded' onChange={this.handleStatusChange}>
+                            <option>Select Repo Status...</option>
                             <option value="true">Private</option>
                             <option value="false">Public</option>
                         </select>
