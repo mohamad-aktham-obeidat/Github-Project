@@ -3,71 +3,71 @@ import '../Style/style.css'
 class Form extends Component {
 
     state = {
-            title:"",
+        newRepository: {
+            title: "",
             language: "",
             status: false
+        }
     }
-
-    handleTitleChange = event => {
-        console.log('TITLE', event.target.value)
+    // Input Change Listener For All Form Inputs.
+    handleChange = event => {
         this.setState({
-            title : event.target.value
+            // Change Value Of Specific Keys in Key inside State.
+            newRepository: {
+                ...this.state.newRepository, // Copy The Entire Object In That State.
+                [event.target.name]: event.target.value // Change Name And Value Depend On Input Change Status.
+            }
         })
-        console.log('STATE', this.state)
     }
 
-    handleLanguageChange = event => {
-        console.log('LANGUAGE', event.target.value)
+    clearInputsValues = () =>{
         this.setState({
-            language : event.target.value
+            // Change Value Of Specific Keys in Key inside State.
+            newRepository: {
+                title: '',
+                language: ''
+            }
         })
-        console.log('STATE', this.state)
-
+        document.getElementById('repo').value = ''
     }
 
-    handleStatusChange = event => {
-        console.log('STATUS', event.target.value)
-        this.setState({
-            status : event.target.value
-        })
-        console.log('STATE', this.state)
-    }
-
-    handleAddButton = event =>{
+    // Send The New Repository To App Component In Order To Add It To Database. 
+    handleAddButton = event => {
         event.preventDefault();
-        this.props.create(this.state)
+        this.props.create(this.state.newRepository, this.clearInputsValues)
     }
 
-
+    // Delete Specific Repository Depend On It's Id
     handleGetButton = event => {
         event.preventDefault();
         this.props.read();
     }
 
     render() {
-        
+        const {handleChange, handleAddButton, handleGetButton} = this
+        const {title, language} = this.state.newRepository;
         return (
             <form className='repo-form d-flex flex-column pt-4 h-100 justify-content-between align-items-center'>
                 <div className="row">
                     <div className="column ml-2">
-                        <input className='form-control w-100 p-3 rounded' type="text" name="title" id="" placeholder="Repo Title" onChange={this.handleTitleChange} />
+                        <input className='form-control w-100 p-3 rounded' type="text" name="title" id="" placeholder="Repo Title" value={title} onChange={handleChange} />
                     </div>
                     <div className="column ml-2">
-                        <input className='form-control w-100 p-3 rounded' type="text" name="language" id="" placeholder="language" onChange={this.handleLanguageChange} />
+                        <input className='form-control w-100 p-3 rounded' type="text" name="language" id="" placeholder="language" value={language} onChange={handleChange} />
                     </div>
                     <div className="form-group column ml-2">
-                        <select defaultValue='Select Repo State...' className='form-control w-100 p-3 rounded' onChange={this.handleStatusChange}>
-                            <option>Select Repo Status...</option>
+                        <select id='repo'  className='form-control' name='status' onChange={handleChange}>
+                            <option value='' selected disabled hidden>Select Repo Status...</option>
                             <option value="true">Private</option>
                             <option value="false">Public</option>
                         </select>
                     </div>
                     <div className="column">
-                        <input className='btn btn-primary rounded-btn w-100 ml-2 border border-white' type="submit" value="Add Repository" onClick={this.handleAddButton} />
+                        <input className='btn btn-primary rounded-btn w-100 ml-2 border border-white' type="submit" value="Add Repository" onClick={handleAddButton} />
                     </div>
                 </div>
                 <div className="row">
-                    <input className='btn btn-danger mt-3 mb-3' type="submit" value="Get All Repositories" onClick={this.handleGetButton} />
+                    <input className='btn btn-danger mt-3 mb-3' type="submit" value="Get All Repositories" onClick={handleGetButton} />
                 </div>
             </form>
         )

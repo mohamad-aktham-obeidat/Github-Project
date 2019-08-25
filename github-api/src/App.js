@@ -27,7 +27,7 @@ class App extends Component {
   }
 
   // Add New Repository To Database.
-  addNewRepository = (newRepositoryData) => {
+  addNewRepository = (newRepositoryData, clearData) => {
     axios.post('/repositories', newRepositoryData)
       .then(response => {
         this.setState({ repositories: response.data });
@@ -35,6 +35,7 @@ class App extends Component {
       .catch(error => {
         console.log(error);
       })
+      clearData();
   }
 
   //Update Repository Status

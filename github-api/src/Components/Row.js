@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 
 class Row extends Component {
 
-    onCheckChanged = (event) =>{
+    /* onCheckChanged = (event) =>{
         this.props.update.bind(this, this.props.id, event.target.checked)
-    }
+    } */
+
     onDeleteButton = event => {
         event.preventDefault();
         this.props.remove(this.props.id)
