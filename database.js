@@ -1,26 +1,49 @@
 // Import Mongoose Files
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 // Connect This File To My DataBase.
-mongoose.connect('mongodb://localhost/GitHubRepos', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/GitHubRepos', { useNewUrlParser: true })
+  .then(() => {
+    console.log('Mongoose Connected Successfully *.*');
+    console.log('__________________________________________________')
+  })
+  .catch(error => { console.log(`${error} -_-`) });
 // Store 'mongoose.connection' in Variable Called "db".
 const db = mongoose.connection;
 // Show Error Message If Connection Not Success
-db.on('error', function () {
-  console.log('mongoose connection error');
-  console.log('__________________________________________')
-});
-// Show Success Message If Connection Successful
-db.once('open', function () {
-  console.log('mongoose connected successfully');
-  console.log('__________________________________________')
-});
+
+// [Another Way To Handle Connection To MongoDB]
+            /* db.on('error', function () {
+              console.log('mongoose connection error');
+              console.log('__________________________________________')
+            });
+            // Show Success Message If Connection Successful
+            db.once('open', function () {
+              console.log('mongoose connected successfully');
+              console.log('__________________________________________')
+            }); */
 
 /*
-// Example schema
+// Example schema #1
 let tasksSchema = new mongoose.Schema({
   title: String,
   age: Number,
   isCompleted: Boolean,
+});
+
+// Example schema #2
+let tasksSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  age:{
+    type: Number,
+    required: true
+  },
+  isCompleted:{
+    type: Boolean,
+    default: false
+  }
 });
 
 // Example modal
@@ -72,19 +95,19 @@ let getRepositories = (callBack) => {
 // Add Specific Repository To Database.
 let addNewRepository = (newRepository, callBack) => {
   Repositories.create(newRepository, (error, response) => {
-    if(error){
+    if (error) {
       callBack(error)
     } else {
       getRepositories(callBack)
     }
   })
-} 
+}
 
 // @ METHOD
 // Update Private Status Of a Specific Repository In Database.
-let updateRepository = (repoID, swapStatus,callBack) => {
+let updateRepository = (repoID, swapStatus, callBack) => {
   console.log('REPOSITORIES', Repositories)
-  Repositories.updateOne({_id: repoID}, {$set: {status: swapStatus}}, (error, response)=>{
+  Repositories.updateOne({ _id: repoID }, { $set: { status: swapStatus } }, (error, response) => {
     if (error) {
       callBack(error)
     } else {
@@ -96,7 +119,7 @@ let updateRepository = (repoID, swapStatus,callBack) => {
 // @ METHOD
 // Delete Specific Repository From Database.
 let deleteRepository = (repoID, callBack) => {
-  Repositories.findOneAndDelete({_id: repoID}, (error, response)=>{
+  Repositories.findOneAndDelete({ _id: repoID }, (error, response) => {
     if (error) {
       callBack(error);
     } else {
